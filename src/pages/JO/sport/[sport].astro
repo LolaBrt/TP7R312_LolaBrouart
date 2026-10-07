@@ -7,7 +7,9 @@ import Layout from "../../../layouts/Layout.astro";
 export function getStaticPaths() {
   const sports = [
     ...new Set(
-      olympians.map((olympian) => olympian.sport).filter((sport) => sport !== null),
+      olympians
+        .map((olympian) => olympian.sport)
+        .filter((sport) => sport && sport.trim() !== ""),
     ),
   ];
 

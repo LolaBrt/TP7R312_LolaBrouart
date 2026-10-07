@@ -2,10 +2,13 @@
 import olympians from "../../../data/olympians.json";
 import Layout from "../../../layouts/Layout.astro";
 
-const sports = [...new Set(olympians.map((olympian) => olympian.sport))].slice(
-  0,
-  3,
-);
+const sports = [
+  ...new Set(
+    olympians
+      .map((olympian) => olympian.sport)
+      .filter((sport) => sport && sport.trim() !== ""),
+  ),
+].slice(0, 3);
 ---
 
 <Layout>
