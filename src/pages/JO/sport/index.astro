@@ -1,0 +1,35 @@
+---
+import olympians from "../../../data/olympians.json";
+import Layout from "../../../layouts/Layout.astro";
+
+const sports = [...new Set(olympians.map((olympian) => olympian.sport))].slice(
+  0,
+  3,
+);
+---
+
+<Layout>
+  <h1>Les athlètes olympiques par sport</h1>
+  <div class="pb-20">
+    <p>
+      Nous verrons ici les différences de taille de bec entre les manchots mâles
+      et femelles (parce qu'apparemment, la taille compte).
+    </p>
+    <p>Choisissez un sexe pour voir les manchots correspondants.</p>
+  </div>
+
+  <ul class="space-y-4 pb-40">
+    {
+      sports.map((sport) => (
+        <li>
+          <a
+            class="font-bold text-lg text-indigo transition-colors hover:text-orange-300"
+            href={`/JO/sport/${sport}`}
+          >
+            Voir les athlètes olympiques de {sport}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>

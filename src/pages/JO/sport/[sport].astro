@@ -1,0 +1,66 @@
+---
+import * as Plot from "@observablehq/plot";
+import olympians from "../../../data/olympians.json";
+import PlotFigure from "../../../components/PlotFigure.astro";
+import Layout from "../../../layouts/Layout.astro";
+
+export function getStaticPaths() {
+  const sports = [
+    ...new Set(
+      olympians.map((olympian) => olympian.sport).filter((sport) => sport !== null),
+    ),
+  ];
+
+  return sports.map((sport) => ({
+    params: {
+      sport,
+    },
+  }));
+}
+
+const { sport } = Astro.params;
+
+const filteredOlympians = olympians
+  .filter((olympian) => olympian.sport === sport)
+  .map((olympian) => ({
+    ...olympian,
+    height: Number(olympian.height),
+    weight: Number(olympian.weight),
+  }))
+  .filter(
+    (olympian) =>
+      Number.isFinite(olympian.height) && Number.isFinite(olympian.weight),
+  );
+
+const plotOptions = {
+  grid: true,
+  marginLeft: 60,
+  x: {
+    label: "poids (kg)",
+  },
+  y: {
+    label: "taille (m)",
+  },
+  title: `Les JO de sport ${sport}`,
+  marks: [
+    Plot.dot(filteredOlympians, {
+      x: "weight",
+      y: "height",
+      fill: "sex",
+      r: 5,
+      fillOpacity: 0.7,
+      tip: true,
+    }),
+  ],
+};
+---
+
+<Layout>
+  <h1>Les athlètes olympiques selon leur sport</h1>
+
+  <p>
+    {filteredOlympians.length} athlète(s) trouvé(s).
+  </p>
+
+  <PlotFigure options={plotOptions} />
+</Layout>

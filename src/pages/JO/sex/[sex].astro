@@ -1,0 +1,67 @@
+---
+import * as Plot from "@observablehq/plot";
+import olympians from "../../../data/olympians.json";
+import PlotFigure from "../../../components/PlotFigure.astro";
+import Layout from "../../../layouts/Layout.astro";
+
+export function getStaticPaths() {
+  const sexes = [
+    ...new Set(
+      olympians.map((olympian) => olympian.sex).filter((sex) => sex !== null),
+    ),
+  ];
+
+  return sexes.map((sex) => ({
+    params: {
+      sex,
+    },
+  }));
+}
+
+const { sex } = Astro.params;
+
+const filteredOlympians = olympians
+  .filter((olympian) => olympian.sex === sex)
+  .map((olympian) => ({
+    ...olympian,
+    height: Number(olympian.height),
+    weight: Number(olympian.weight),
+  }))
+  .filter(
+    (olympian) =>
+      Number.isFinite(olympian.height) &&
+      Number.isFinite(olympian.weight),
+  );
+  
+const plotOptions = {
+  grid: true,
+  marginLeft: 60,
+  x: {
+    label: "poids (kg)",
+  },
+  y: {
+    label: "taille (m)",
+  },
+  title: `Les JO de sexe ${sex}`,
+  marks: [
+    Plot.dot(filteredOlympians, {
+      x: "weight",
+      y: "height",
+      fill: "sex",
+      r: 5,
+      fillOpacity: 0.7,
+      tip: true,
+    }),
+  ],
+};
+---
+
+<Layout>
+  <h1>Les athlètes olympiques {sex === "MALE" ? "mâles" : "femelles"}</h1>
+
+  <p>
+    {filteredOlympians.length} athlète(s) trouvé(s).
+  </p>
+
+  <PlotFigure options={plotOptions} />
+</Layout>

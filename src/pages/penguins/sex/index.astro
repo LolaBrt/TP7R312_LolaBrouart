@@ -1,0 +1,33 @@
+---
+import penguins from "../../../data/penguins.json";
+import Layout from "../../../layouts/Layout.astro";
+
+const sexes = [
+  ...new Set(
+    penguins.map((penguin) => penguin.sex).filter((sex) => sex !== null),
+  ),
+];
+---
+
+<Layout>
+  <h1>Les manchots par sexe</h1>
+  <div class='pb-20'>
+    <p>Nous verrons ici les différences de taille de bec entre les manchots mâles et femelles (parce qu'apparemment, la taille compte).</p>
+    <p>Choisissez un sexe pour voir les manchots correspondants.</p>
+  </div>
+
+  <ul class="space-y-4 pb-40">
+    {
+      sexes.map((sex) => (
+        <li>
+          <a
+            class="font-bold text-lg text-indigo transition-colors hover:text-orange-300"
+            href={`/penguins/sex/${sex}`}
+          >
+            Voir les manchots {sex === "MALE" ? "mâles" : "femelles"}{" "}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>

@@ -1,0 +1,35 @@
+---
+import penguins from "../../../data/penguins.json";
+import Layout from "../../../layouts/Layout.astro";
+
+const islands = [
+  ...new Set(
+    penguins.map((penguin) => penguin.island).filter((island) => island !== null),
+  ),
+];
+---
+
+<Layout>
+  <h1>Les manchots par île</h1>
+  <div class="pb-20">
+    <p>
+      Nous verrons ici les différences de taille de bec des manchots venant de différentes îles.
+    </p>
+    <p>Choisissez une île pour voir les manchots correspondants.</p>
+  </div>
+
+  <ul class="space-y-4 pb-30">
+    {
+      islands.map((island) => (
+        <li>
+          <a
+            class="font-bold text-lg text-indigo transition-colors hover:text-orange-300"
+            href={`/penguins/island/${island}`}
+          >
+            Voir les manchots venant de {island}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>
